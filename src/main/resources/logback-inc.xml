@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+	<!--模块名请替换成具体的war名称，在机器的根目录请创建app_logs文件夹，保证tomcat用户有权限访问上面两个文件夹 -->
+	<substitutionProperty name="proj.name" value="contract-util" />
+	<substitutionProperty name="log.base"
+		value="/xxx/logs/contract-util" />
+	<substitutionProperty name="max.size" value="200MB" />
+	<jmxConfigurator />
+
+	<!--控制台输出appender -->
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date [%thread] [%X{uid} - %X{url}] %-5level %logger{80} -	%msg%n</pattern>
+		</encoder>
+		<includeCallerData>true</includeCallerData>
+	</appender>
+	<!--控制台输出appender -->
+
+	<!--ERROR级别日志输出appender -->
+	<appender name="ERROR-APPENDER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.base}/${proj.name}_error.log</File>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${log.base}/${proj.name}_error_%d{yyyy-MM-dd}_%i.log
+			</FileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>[%date],[%class],[%method],[%thread],[ERROR],[%X{uid}],[%X{bizID}],[%msg],[%exception]%n</pattern>
+		</encoder>
+	</appender>
+	<!--ERROR级别日志输出appender -->
+
+	<!--异步ERROR级别日志输出appender -->
+	<appender name="ASYNC-ERROR-APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>1024</queueSize>
+		<appender-ref ref="ERROR-APPENDER" />
+		<includeCallerData>true</includeCallerData>
+	</appender>
+	<!--异步ERROR级别日志输出appender -->
+
+	<!--RPC 异常日志输出appender -->
+	<appender name="RPC-EXCP-APPENDER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.base}/${proj.name}_rpcexcp.log</File>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${log.base}/${proj.name}_rpcexcp_%d{yyyy-MM-dd}_%i.log
+			</FileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>[%date],[%class],[%method],[RPC-EXCEPTION],[%X{uid}],[%X{rpcUrl}],[%msg]%n</pattern>
+		</encoder>
+	</appender>
+	<!--RPC 异常日志输出appender -->
+
+	<!--异步rpc异常日志输出appender -->
+	<appender name="ASYNC-RPC-EXCP-APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>1024</queueSize>
+		<appender-ref ref="RPC-EXCP-APPENDER" />
+		<includeCallerData>true</includeCallerData>
+	</appender>
+	<!--异步rpc异常日志输出appender -->
+
+	<!--INFO级别日志输出appender -->
+	<appender name="INFO-APPENDER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.base}/${proj.name}_info.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${log.base}/${proj.name}_info_%d{yyyy-MM-dd}_%i.log
+			</FileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>[%date],[%class],[%method],[%thread],[INFO],[%X{uid}],[%X{bizID}],[%msg]%n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<!-- <onMismatch>DENY</onMismatch> -->
+		</filter>
+	</appender>
+	<!--INFO级别日志输出appender -->
+
+	<!--异步INFO级别日志输出appender -->
+	<appender name="ASYNC-INFO-APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>1024</queueSize>
+		<appender-ref ref="INFO-APPENDER" />
+		<includeCallerData>true</includeCallerData>
+	</appender>
+	<!--异步INFO级别日志输出appender -->
+
+	<!--WARN级别日志输出appender -->
+	<appender name="WARN-APPENDER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.base}/${proj.name}_warn.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${log.base}/${proj.name}_warn_%d{yyyy-MM-dd}_%i.log
+			</FileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>[%date],[%class],[%method],[%thread],[WARN],[%X{url}],[%X{uid}],[%msg]%n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>WARN</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<!--WARN级别日志输出appender -->
+
+	<!--异步WARN级别日志输出appender -->
+	<appender name="ASYNC-WARN-APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>1024</queueSize>
+		<appender-ref ref="WARN-APPENDER" />
+		<includeCallerData>true</includeCallerData>
+	</appender>
+	<!--异步WARN级别日志输出appender -->
+
+	<!--当前应用作为客户端发起hessian调用时日志输出appender -->
+	<appender name="HESSIAN-CLIENT-DIGEST-APPENDER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.base}/hessian-client-digest.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${log.base}/hessian-client-digest_%d{yyyy-MM-dd}_%i.log
+			</FileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>[%date],[%class],[%method],[%thread],[HCLIENT],[%X{uid}],[%X{serverName}],[%X{url}],[%X{elapseTime}],[%X{timeOut}]%n</pattern>
+		</encoder>
+	</appender>
+	<!--当前应用作为客户端发起hessian调用时日志输出appender -->
+
+	<!--当前应用作为客户端发起hessian调用时异步日志输出appender -->
+	<appender name="ASYNC-HESSIAN-CLIENT-DIGEST-APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>1024</queueSize>
+		<appender-ref ref="HESSIAN-CLIENT-DIGEST-APPENDER" />
+		<includeCallerData>true</includeCallerData>
+	</appender>
+	<!--当前应用作为客户端发起hessian调用时异步日志输出appender -->
+
+	<!--当前应用作为服务端接收hessian调用时日志输出appender -->
+	<appender name="HESSIAN-SERVICE-DIGEST-APPENDER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.base}/hessian-service-digest.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${log.base}/hessian-service-digest_%d{yyyy-MM-dd}_%i.log
+			</FileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>[%date],[%X{url}],[%thread],[HSERVICE],[%X{uid}],[%X{clientName}],[%X{elapseTime}],[%X{timeOut}]%n</pattern>
+		</encoder>
+	</appender>
+	<!--当前应用作为服务端接收hessian调用时日志输出appender -->
+
+	<!--当前应用作为服务端接收hessian调用时异步日志输出appender -->
+	<appender name="ASYNC-HESSIAN-SERVICE-DIGEST-APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>1024</queueSize>
+		<appender-ref ref="HESSIAN-SERVICE-DIGEST-APPENDER" />
+		<includeCallerData>true</includeCallerData>
+	</appender>
+	<!--当前应用作为服务端接收hessian调用时异步日志输出appender -->
+
+	<!--当前应用作为服务端接收http调用时日志输出appender -->
+	<appender name="PAGE-DIGEST-APPENDER"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.base}/page-digest.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${log.base}/page-digest_%d{yyyy-MM-dd}_%i.log
+			</FileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>${max.size}</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>[%date],[%class],[%method],[%thread],[PAGE-DIGEST],[%X{uid}],[%X{url}],[%msg]%n</pattern>
+		</encoder>
+	</appender>
+	<!--当前应用作为服务端接收http调用时日志输出appender -->
+
+	<!--当前应用作为服务端接收http调用时异步日志输出appender -->
+	<appender name="ASYNC-PAGE-DIGEST-APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>1024</queueSize>
+		<appender-ref ref="PAGE-DIGEST-APPENDER" />
+		<includeCallerData>true</includeCallerData>
+	</appender>
+	<!--当前应用作为服务端接收http调用时异步日志输出appender -->
+
+	<!-- 安全日志输出appender -->
+	<appender name="securitylog"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.base}/security.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${log.base}/security_%d{yyyy-MM-dd}_%i.log
+			</FileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%msg%n</pattern>
+		</encoder>
+	</appender>
+	<!-- 安全日志输出appender -->
+
+	<!-- 安全日志异步输出appender -->
+	<appender name="ASYNC-SECURITY-APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>1024</queueSize>
+		<appender-ref ref="securitylog" />
+		<includeCallerData>true</includeCallerData>
+	</appender>
+	<!-- 安全日志异步输出appender -->
+
+	<!--作为hessian调用发起方，日志记录器，使用如下：private static final Logger logger = LoggerFactory.getLogger("HESSIAN-CLIENT-DIGEST"); -->
+	<logger name="HESSIAN-CLIENT-DIGEST" level="INFO" additivity="false">
+		<appender-ref ref="ASYNC-HESSIAN-CLIENT-DIGEST-APPENDER" />
+	</logger>
+
+	<!--作为hessian调用服务方，日志记录器，使用如下：private static final Logger logger = LoggerFactory.getLogger("HESSIAN-SERVICE-DIGEST"); -->
+	<logger name="HESSIAN-SERVICE-DIGEST" level="INFO" additivity="false">
+		<appender-ref ref="ASYNC-HESSIAN-SERVICE-DIGEST-APPENDER" />
+	</logger>
+	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">   
+		<encoder>   
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>   
+		</encoder>   
+	</appender>
+	<logger name="org.apache.http.impl.conn.PoolingHttpClientConnectionManager" level="INFO" />
+
+	<root level="info">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="ASYNC-INFO-APPENDER" />
+		<appender-ref ref="ASYNC-WARN-APPENDER" />
+		<appender-ref ref="ASYNC-ERROR-APPENDER" />
+	</root>
+</included>
